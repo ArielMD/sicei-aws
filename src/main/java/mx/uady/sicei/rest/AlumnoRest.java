@@ -20,54 +20,39 @@ import org.springframework.web.bind.annotation.RestController;
 import mx.uady.sicei.model.Alumno;
 import mx.uady.sicei.service.AlumnoService;
 
-@RestController // Metaprogramacion
+@RestController
 @RequestMapping("/api")
 public class AlumnoRest {
 
     @Autowired
     private AlumnoService alumnoService;
 
-    @GetMapping("/alumnos") // Verbo GET, URL: uady.mx/api/alumnos
+    @GetMapping("/alumnos")
     public ResponseEntity<List<Alumno>> getAlumnos() {
         return ResponseEntity.ok().body(alumnoService.getAlumnos());
     }
 
-    @PostMapping("/alumnos") // ? /alumnos/crear
+    @PostMapping("/alumnos")
     public ResponseEntity<Alumno> crearAlumno( @Validated @RequestBody Alumno alumno) {
         Alumno alumnoCreado = alumnoService.crearAlumno(alumno);
-        return ResponseEntity.ok().body(alumnoCreado);
+        return new ResponseEntity<Alumno>(alumnoCreado, HttpStatus.CREATED);
     }
 
-    // Path Paramater
-    @PutMapping("/alumnos/{matricula}") // PUT /alumnos/1001930
-    public ResponseEntity<Alumno> editarAlumno(@PathVariable String matricula, @Valid @RequestBody Alumno alumno) {
-        Alumno alumnoEditado = alumnoService.editarAlumno(matricula, alumno);
-        if(alumnoEditado != null){
-            return new ResponseEntity<Alumno>(alumnoEditado, HttpStatus.OK);
-        }else{
-            return new ResponseEntity<Alumno>( alumnoEditado, HttpStatus.UNPROCESSABLE_ENTITY);
-        }
+    @PutMapping("/alumnos/{id}")
+    public ResponseEntity<Alumno> editarAlumno(@PathVariable Integer id, @Valid @RequestBody Alumno alumno) {
+        Alumno alumnoEditado = alumnoService.editarAlumno(id, alumno);
+        return new ResponseEntity<Alumno>(alumnoEditado, HttpStatus.OK);
     }
 
-    // Path Paramater
-    @GetMapping("/alumnos/{matricula}") // GET /alumnos/1001930
-    public ResponseEntity<Alumno> obtenerAlumno(@PathVariable String matricula) {
-        Alumno alumno = alumnoService.getAlumno(matricula);
-        if(alumno != null){
-            return new ResponseEntity<Alumno>(alumno, HttpStatus.OK);
-        }else{
-            return new ResponseEntity<Alumno>(alumno, HttpStatus.NOT_FOUND);
-        }
+    @GetMapping("/alumnos/{id}")
+    public ResponseEntity<Alumno> obtenerAlumno(@PathVariable Integer id) {
+        Alumno alumno = alumnoService.getAlumno(id);
+        return new ResponseEntity<Alumno>(alumno, HttpStatus.OK);
     }
 
-    // Path Paramater
-    @DeleteMapping("/alumnos/{matricula}") // DELETE /alumnos/1001930
-    public ResponseEntity<Boolean> eliminarAlumno(@PathVariable String matricula) {
-        boolean result = alumnoService.eliminarAlumno(matricula);
-        if (result) {
-            return new ResponseEntity<Boolean>( result, HttpStatus.OK);
-        }else{
-            return new ResponseEntity<Boolean>( result, HttpStatus.UNPROCESSABLE_ENTITY);
-        }
+    @DeleteMapping("/alumnos/{id}")
+    public ResponseEntity<Void> eliminarAlumno(@PathVariable Integer id) {
+        alumnoService.eliminarAlumno(id);
+        return ResponseEntity.ok().build();
     }
 }
