@@ -1,38 +1,24 @@
-package mx.uady.sicei.model;
+package mx.uady.sicei.model.request;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
-@Entity
-@Table(name = "alumnos")
-public class Alumno {
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // f(x) = y
-    private Integer id;
-
-    @Column(name = "nombres")
+public class AlumnoRequest {
+    
+    @NotBlank(message = "El nombre no puede estar en blanco")
     private String nombres;
 
-    @Column(name = "apellidos")
+    @NotBlank(message = "El apellidos no puede estar en blanco")
     private String apellidos;
 
-    @Column(name = "matricula")
+    @NotBlank(message = "La matricula no puede estar en blanco")
     private String matricula;
 
-    @Column(name = "promedio")
+    @NotNull(message = "El promedio no puede estar en blanco")
     private float promedio;
 
-    public Alumno() {
-    }
-
-    public Integer getId() {
-        return id;
+    public AlumnoRequest() {
     }
 
     public String getNombres() {

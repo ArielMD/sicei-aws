@@ -1,39 +1,26 @@
-package mx.uady.sicei.model;
+package mx.uady.sicei.model.request;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
-@Entity
-@Table(name = "maestros")
-public class Maestro {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // f(x) = y
-    private Integer id;
+public class MaestroRequest {
 
-    @Column(name = "numero_empleado")
+    @NotNull(message = "El numero de empleado no puede estar en blanco")
     private Integer numeroEmpleado;
 
-    @Column(name = "nombres")
+    @NotBlank(message = "los nombre no puede estar en blanco")
     private String nombres;
 
-    @Column(name = "apellidos")
+    @NotBlank(message = "Los apellidos no puede estar en blanco")
     private String apellidos;
 
-    @Column(name = "horas_clase")
+    @NotNull(message = "Las horas de clase no puede estar en blanco")
     private Integer horasClase;
 
-    public Maestro() {
+    public MaestroRequest() {
     }
 
-    public Integer getId() {
-        return id;
-    }
-    
     public Integer getNumeroEmpleado() {
         return numeroEmpleado;
     }

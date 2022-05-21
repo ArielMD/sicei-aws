@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import mx.uady.sicei.model.Alumno;
+import mx.uady.sicei.model.request.AlumnoRequest;
 import mx.uady.sicei.service.AlumnoService;
 
 @RestController
@@ -33,13 +34,13 @@ public class AlumnoRest {
     }
 
     @PostMapping("/alumnos")
-    public ResponseEntity<Alumno> crearAlumno( @Validated @RequestBody Alumno alumno) {
+    public ResponseEntity<Alumno> crearAlumno( @Validated @RequestBody AlumnoRequest alumno) {
         Alumno alumnoCreado = alumnoService.crearAlumno(alumno);
         return new ResponseEntity<Alumno>(alumnoCreado, HttpStatus.CREATED);
     }
 
     @PutMapping("/alumnos/{id}")
-    public ResponseEntity<Alumno> editarAlumno(@PathVariable Integer id, @Valid @RequestBody Alumno alumno) {
+    public ResponseEntity<Alumno> editarAlumno(@PathVariable Integer id, @Valid @RequestBody AlumnoRequest alumno) {
         Alumno alumnoEditado = alumnoService.editarAlumno(id, alumno);
         return new ResponseEntity<Alumno>(alumnoEditado, HttpStatus.OK);
     }

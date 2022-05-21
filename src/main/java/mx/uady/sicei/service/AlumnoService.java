@@ -2,34 +2,41 @@ package mx.uady.sicei.service;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import mx.uady.sicei.exception.NotFoundException;
-import mx.uady.sicei.exception.UnprocessableEntityException;
 import mx.uady.sicei.model.Alumno;
+import mx.uady.sicei.model.request.AlumnoRequest;
+import mx.uady.sicei.repository.AlumnoRepository;
 
 @Service
 public class AlumnoService {
+    @Autowired
+    AlumnoRepository alumnoRepository;
 
-    private List<Alumno> alumnos = new LinkedList<>();
-    
     public List<Alumno> getAlumnos() {
+        List<Alumno> alumnos = new LinkedList<>();
+
+        alumnoRepository.findAll().iterator().forEachRemaining(alumnos::add);
         return alumnos;
     }
+    
+    public Alumno crearAlumno(AlumnoRequest alumno) {
+        Alumno nuevoAlumno = new Alumno();
+        nuevoAlumno.setNombres(alumno.getNombres());
+        nuevoAlumno.setApellidos(alumno.getApellidos());
+        nuevoAlumno.setMatricula(alumno.getMatricula());
+        nuevoAlumno.setPromedio(alumno.getPromedio());
 
-    public Alumno crearAlumno(Alumno alumno) {
-        Alumno alumnoEncontrado = buscarAlumno(alumno.getId());
+        nuevoAlumno = alumnoRepository.save(nuevoAlumno);
 
-        if (alumnoEncontrado != null) {
-            throw new UnprocessableEntityException("El alumno ya existe");
-        }
-
-        alumnos.add(alumno);
-        return alumno;
+        return nuevoAlumno;
     }
 
-    public Alumno editarAlumno(Integer id, Alumno alumno){
+    public Alumno editarAlumno(Integer id, AlumnoRequest alumno){
         
         Alumno alumnoEncontrado = buscarAlumno(id);
 
@@ -41,33 +48,26 @@ public class AlumnoService {
         alumnoEncontrado.setApellidos(alumno.getApellidos());
         alumnoEncontrado.setMatricula(alumno.getMatricula());
         alumnoEncontrado.setPromedio(alumno.getPromedio());
+        
+        alumnoEncontrado = alumnoRepository.save(alumnoEncontrado);
             
         return alumnoEncontrado;
     }
 
     public Alumno getAlumno(Integer id){
-        Alumno alumnoEncontrado = buscarAlumno(id);
-
-        if (alumnoEncontrado == null) {
-            throw new NotFoundException("Alumno no encontrado");
-        }
-
-        return alumnoEncontrado;
+        return buscarAlumno(id);
     }
 
-    public boolean eliminarAlumno(Integer id){
-        Alumno alumnoEncontrado = buscarAlumno(id);
-
-        if (alumnoEncontrado == null) {
-            throw new NotFoundException("Alumno no encontrado");
-        }
-
-        return  alumnos.removeIf(alumno -> id.equals(alumno.getId()));
+    public void eliminarAlumno(Integer id){
+        Alumno alumno = buscarAlumno(id);
+        alumnoRepository.delete(alumno);
     }
 
     private Alumno buscarAlumno(Integer id){
-        return alumnos.stream().filter(alumno-> id.equals(alumno.getId()))
-                               .findFirst()
-                               .orElse(null);
+        Optional<Alumno> alumno = this.alumnoRepository.findById(id);
+        if(!alumno.isPresent()) {
+            throw new NotFoundException("El alumno solicitado no existe");
+        }
+        return alumno.get();
     }
 }
