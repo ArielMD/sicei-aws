@@ -28,6 +28,9 @@ public class Alumno {
     @Column(name = "promedio")
     private float promedio;
 
+    @Column(name = "fotoPerfil")
+    private String fotoPerfil;
+
     public Alumno() {
     }
 
@@ -65,5 +68,13 @@ public class Alumno {
 
     public void setPromedio(float promedio) {
         this.promedio = promedio;
+    }
+
+    public String getFotoPerfil() {
+        return fotoPerfil;
+    }
+
+    public void setFotoPerfil(String url) {
+        this.fotoPerfil = url;
     }
 }

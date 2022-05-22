@@ -1,5 +1,10 @@
 package mx.uady.sicei.rest;
 
+
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -60,9 +65,9 @@ public class AlumnoRest {
     }
 
     @PostMapping(value= "/alumnos/{id}/fotoPerfil")
-    public ResponseEntity<String> uploadFile(@PathVariable Integer id, @RequestParam("file") MultipartFile file) {
-        alumnoService.subirFotoPerfil(file);
-        final String response = "[" + file.getOriginalFilename() + "] uploaded successfully.";
-        return new ResponseEntity<>(response, HttpStatus.OK);
+    public ResponseEntity<Void> uploadFile(@PathVariable Integer id, @RequestParam("file") MultipartFile file) throws MalformedURLException, URISyntaxException {
+        String url = alumnoService.subirFotoPerfil(id, file);
+        URL urlObject = new URL(url);
+        return ResponseEntity.created(new URI(urlObject.getProtocol(), urlObject.getHost(), urlObject.getFile())).build();
     }
 }

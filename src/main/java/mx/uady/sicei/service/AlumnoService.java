@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import mx.uady.sicei.exception.NotFoundException;
+import mx.uady.sicei.exception.UploadException;
 import mx.uady.sicei.model.Alumno;
 import mx.uady.sicei.model.request.AlumnoRequest;
 import mx.uady.sicei.repository.AlumnoRepository;
@@ -67,8 +68,18 @@ public class AlumnoService {
         alumnoRepository.delete(alumno);
     }
 
-    public void subirFotoPerfil(MultipartFile file){
-        uploadFileService.uploadFile(file);
+    public String subirFotoPerfil(Integer id, MultipartFile file){
+        Alumno alumno = buscarAlumno(id);
+
+        try {
+            String url = uploadFileService.uploadFile(file);
+            alumno.setFotoPerfil(url);
+            alumnoRepository.save(alumno);
+            return url;
+        } catch (Exception e) {
+            throw new UploadException("No se pudo subir el archivo");
+        }
+
     }
 
     private Alumno buscarAlumno(Integer id){
