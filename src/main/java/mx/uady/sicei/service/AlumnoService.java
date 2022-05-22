@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import mx.uady.sicei.exception.NotFoundException;
 import mx.uady.sicei.model.Alumno;
@@ -16,6 +17,9 @@ import mx.uady.sicei.repository.AlumnoRepository;
 public class AlumnoService {
     @Autowired
     AlumnoRepository alumnoRepository;
+
+    @Autowired
+    UploadFileService uploadFileService;
 
     public List<Alumno> getAlumnos() {
         List<Alumno> alumnos = new LinkedList<>();
@@ -61,6 +65,10 @@ public class AlumnoService {
     public void eliminarAlumno(Integer id){
         Alumno alumno = buscarAlumno(id);
         alumnoRepository.delete(alumno);
+    }
+
+    public void subirFotoPerfil(MultipartFile file){
+        uploadFileService.uploadFile(file);
     }
 
     private Alumno buscarAlumno(Integer id){

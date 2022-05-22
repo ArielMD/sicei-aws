@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import mx.uady.sicei.model.Alumno;
 import mx.uady.sicei.model.request.AlumnoRequest;
@@ -55,5 +57,12 @@ public class AlumnoRest {
     public ResponseEntity<Void> eliminarAlumno(@PathVariable Integer id) {
         alumnoService.eliminarAlumno(id);
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping(value= "/alumnos/{id}/fotoPerfil")
+    public ResponseEntity<String> uploadFile(@PathVariable Integer id, @RequestParam("file") MultipartFile file) {
+        alumnoService.subirFotoPerfil(file);
+        final String response = "[" + file.getOriginalFilename() + "] uploaded successfully.";
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
