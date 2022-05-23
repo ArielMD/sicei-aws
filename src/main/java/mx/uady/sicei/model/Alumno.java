@@ -28,7 +28,7 @@ public class Alumno {
     @Column(name = "promedio")
     private float promedio;
 
-    @Column(name = "fotoPerfil")
+    @Column(name = "foto_perfil")
     private String fotoPerfil;
 
     public Alumno() {

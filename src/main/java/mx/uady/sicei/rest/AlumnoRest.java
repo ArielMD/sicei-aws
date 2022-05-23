@@ -64,7 +64,7 @@ public class AlumnoRest {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping(value= "/alumnos/{id}/fotoPerfil")
+    @PostMapping("/alumnos/{id}/fotoPerfil")
     public ResponseEntity<Void> uploadFile(@PathVariable Integer id, @RequestParam("file") MultipartFile file) throws MalformedURLException, URISyntaxException {
         String url = alumnoService.subirFotoPerfil(id, file);
         URL urlObject = new URL(url);
