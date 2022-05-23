@@ -68,14 +68,14 @@ public class AlumnoService {
         alumnoRepository.delete(alumno);
     }
 
-    public String subirFotoPerfil(Integer id, MultipartFile file){
+    public Alumno subirFotoPerfil(Integer id, MultipartFile file){
         Alumno alumno = buscarAlumno(id);
 
         try {
             String url = uploadFileService.uploadFile(file);
             alumno.setFotoPerfil(url);
-            alumnoRepository.save(alumno);
-            return url;
+            alumno = alumnoRepository.save(alumno);
+            return alumno;
         } catch (Exception e) {
             throw new UploadException("No se pudo subir el archivo");
         }

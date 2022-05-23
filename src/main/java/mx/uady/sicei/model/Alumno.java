@@ -70,7 +70,7 @@ public class Alumno {
         this.promedio = promedio;
     }
 
-    public String getFotoPerfil() {
+    public String getfotoPerfilUrl() {
         return fotoPerfil;
     }
 

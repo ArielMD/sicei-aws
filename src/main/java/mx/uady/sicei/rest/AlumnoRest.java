@@ -1,16 +1,14 @@
 package mx.uady.sicei.rest;
 
-
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.List;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -41,7 +40,7 @@ public class AlumnoRest {
     }
 
     @PostMapping("/alumnos")
-    public ResponseEntity<Alumno> crearAlumno( @Validated @RequestBody AlumnoRequest alumno) {
+    public ResponseEntity<Alumno> crearAlumno(@Validated @RequestBody AlumnoRequest alumno) {
         Alumno alumnoCreado = alumnoService.crearAlumno(alumno);
         return new ResponseEntity<Alumno>(alumnoCreado, HttpStatus.CREATED);
     }
@@ -64,10 +63,13 @@ public class AlumnoRest {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/alumnos/{id}/fotoPerfil")
-    public ResponseEntity<Void> uploadFile(@PathVariable Integer id, @RequestParam("file") MultipartFile file) throws MalformedURLException, URISyntaxException {
-        String url = alumnoService.subirFotoPerfil(id, file);
-        URL urlObject = new URL(url);
-        return ResponseEntity.created(new URI(urlObject.getProtocol(), urlObject.getHost(), urlObject.getFile())).build();
+    @PostMapping(value = "/alumnos/{id}/fotoPerfil", consumes = {
+        MediaType.MULTIPART_FORM_DATA_VALUE,
+        MediaType.APPLICATION_JSON_VALUE
+    })
+    public ResponseEntity<Alumno> uploadFile(@PathVariable Integer id, @RequestParam("foto") MultipartFile file)
+            throws MalformedURLException, URISyntaxException {
+        Alumno alumno = alumnoService.subirFotoPerfil(id, file);
+        return new ResponseEntity<Alumno>(alumno, HttpStatus.OK);
     }
 }
